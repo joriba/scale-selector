@@ -4,7 +4,14 @@
 
         </p>
         <button type="button"
-        onclick="//Todo">
+        onclick="displayScales()">
         Generate</button>
+
+        <script>
+        function displayScales() {
+            document.getElementById('order').innerHTML = generateScales();
+        }
+        </script>
+        <script src="generateScales.js"></script>
     </body>
 </html>
