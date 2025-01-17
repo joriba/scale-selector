@@ -1,17 +1,26 @@
 <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
     <body>
-        <p id="order">
+        <div class="block mx-auto w-1/2 items-center bg-violet-50">
+            <p id="scaleset" class="center"> </p>
+            <button type="button" onclick="displayScales()">
+            Generate</button>
+            <p id="randomized-display"> </p>        
+        </div>
 
-        </p>
-        <button type="button"
-        onclick="displayScales()">
-        Generate</button>
-
+        <script src="generateScales.js"></script>
         <script>
         function displayScales() {
-            document.getElementById('order').innerHTML = generateScales();
+            document.getElementById('randomized-display').innerHTML = generateScales();
         }
         </script>
-        <script src="generateScales.js"></script>
+        <!-- Display the list of scales at the top -->
+        <script>
+            document.getElementById('scaleset').innerHTML = NOTES
+                .reduce((acc, current) => acc.concat(current.concat("<br>")), "")
+        </script>
     </body>
 </html>
