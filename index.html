@@ -22,12 +22,12 @@
         <script src="generateScales.js"></script>
         <script>
         function displayScales() {
-            document.getElementById('randomized-display').innerHTML = generateScales();
+            document.getElementById('randomized-display').innerHTML = selectScales();
         }
         </script>
         <!-- Display the list of scales at the top -->
         <script>
-            document.getElementById('scaleset').innerHTML = scaleSet()
+            document.getElementById('scaleset').innerHTML = allScales()
                 .reduce((acc, current) => acc.concat(current.concat("<br>")), "")
         </script>
     </body>
