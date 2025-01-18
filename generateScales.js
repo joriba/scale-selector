@@ -28,10 +28,20 @@ function allScales() {
         .concat(minorScales());
 }
 
-function selectScales() {
-    let set = allScales();
-    let shuffled = set.map(value => ({ value, sort: Math.random() }))
+function shuffle(list) {
+    return list.map(value => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
         .map(({value}) => value);
+}
+
+function selectScales() {
+    // we want all the major scales, plus seven randomly chosen minor scales
+    // of any type
+    const NUM_MINOR = 7;
+
+    let major = majorScales();
+    let minor = shuffle(minorScales()).slice(0, NUM_MINOR);
+    let set = major.concat(minor);
+    let shuffled = shuffle(set);
     return shuffled.reduce((acc, current) => acc.concat(current.concat("<br>")), "");
 }
