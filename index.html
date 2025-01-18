@@ -27,7 +27,7 @@
         </script>
         <!-- Display the list of scales at the top -->
         <script>
-            document.getElementById('scaleset').innerHTML = NOTES
+            document.getElementById('scaleset').innerHTML = scaleSet()
                 .reduce((acc, current) => acc.concat(current.concat("<br>")), "")
         </script>
     </body>
