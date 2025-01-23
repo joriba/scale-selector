@@ -34,13 +34,27 @@ function shuffle(list) {
         .map(({value}) => value);
 }
 
+function alwaysIncluded() {
+    return allScales().filter(scale => {
+        let checkbox = document.getElementById(`always-include-${scale}`);
+        return checkbox.checked;
+    });
+}
+
+function chosenForSelection() {
+    return allScales().filter(scale => {
+        let checkbox = document.getElementById(`select-${scale}`);
+        return checkbox.checked;
+    });
+}
+
 function selectScales() {
     // we want all the major scales, plus seven randomly chosen minor scales
     // of any type
-    const NUM_MINOR = 7;
+    const NUM_SELECT = 7;
 
     let major = majorScales();
-    let minor = shuffle(minorScales()).slice(0, NUM_MINOR);
+    let minor = shuffle(minorScales()).slice(0, NUM_SELECT);
     let set = major.concat(minor);
     let shuffled = shuffle(set);
     return shuffled.reduce((acc, current) => acc.concat(current.concat("<br>")), "");
