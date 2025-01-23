@@ -45,3 +45,18 @@ function selectScales() {
     let shuffled = shuffle(set);
     return shuffled.reduce((acc, current) => acc.concat(current.concat("<br>")), "");
 }
+
+function applyScaleSetDisplay() {
+    let html = '<table>';
+    let scales = allScales();
+    for (let i = 0; i < scales.length; i++) {
+        html += '<tr>';
+        html += `<td>${scales[i]}</td>`;
+        html += `<td><input type="checkbox"></td>`
+        html += `<td><input type="checkbox"></td>`
+        html += '</tr>';
+    }
+    html += '</table>';
+
+    document.getElementById('scaleset').innerHTML = html;
+}

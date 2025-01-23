@@ -24,12 +24,11 @@
         function displayScales() {
             document.getElementById('randomized-display').innerHTML = selectScales();
         };
-        displayScales()
+        displayScales() // generate a random list upon site load
         </script>
         <!-- Display the list of scales at the top -->
         <script>
-            document.getElementById('scaleset').innerHTML = allScales()
-                .reduce((acc, current) => acc.concat(current.concat("<br>")), "")
+        applyScaleSetDisplay()
         </script>
     </body>
 </html>
