@@ -47,13 +47,27 @@ function selectScales() {
 }
 
 function applyScaleSetDisplay() {
-    let html = '<table>';
+    let html = '<table class="w-auto mx-auto">';
+    html += '<tr>'
+    html += '<th>Scale</th>'
+    html += '<th>Always include</th>'
+    html += '<th>Choose for selection</th>'
+    html += '</tr>'
     let scales = allScales();
     for (let i = 0; i < scales.length; i++) {
         html += '<tr>';
-        html += `<td>${scales[i]}</td>`;
-        html += `<td><input type="checkbox"></td>`
-        html += `<td><input type="checkbox"></td>`
+        html += `<td class="text-center w-fit">${scales[i]}</td>`;
+        html += `<td class="text-center w-min">
+        <input 
+            type="checkbox" 
+            id="always-include-${scales[i]}">
+        </input></td>`
+        html += `<td class="text-center w-min">
+        <input 
+            type="checkbox" 
+            id="select-${scales[i]}">
+        </input></td>`
+
         html += '</tr>';
     }
     html += '</table>';
