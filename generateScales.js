@@ -2,6 +2,15 @@ const NOTES = [
     'C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭/F#', 'G', 'A♭', 'A', 'B♭', 'B'
 ]
 
+function DEFAULTS() {
+    let alwaysInclude = majorScales();
+    let selection = minorScales();
+    return {
+        alwaysInclude: alwaysInclude,
+        selection: selection,
+    };
+}
+
 function majorScales() {
     return NOTES.map(note => note.concat(' Maj'));
 }
@@ -53,9 +62,9 @@ function selectScales() {
     // of any type
     const NUM_SELECT = 7;
 
-    let major = majorScales();
-    let minor = shuffle(minorScales()).slice(0, NUM_SELECT);
-    let set = major.concat(minor);
+    let selection = shuffle(chosenForSelection()).slice(0, NUM_SELECT);
+    let always = alwaysIncluded();
+    let set = always.concat(selection);
     let shuffled = shuffle(set);
     return shuffled.reduce((acc, current) => acc.concat(current.concat("<br>")), "");
 }
@@ -69,17 +78,19 @@ function applyScaleSetDisplay() {
     html += '</tr>'
     let scales = allScales();
     for (let i = 0; i < scales.length; i++) {
+        let inAlways = DEFAULTS().alwaysInclude.includes(scales[i]) ? "checked" : "";
+        let inSelection = DEFAULTS().selection.includes(scales[i]) ? "checked" : "";
         html += '<tr>';
         html += `<td class="text-center w-fit">${scales[i]}</td>`;
         html += `<td class="text-center w-min">
         <input 
-            type="checkbox" 
-            id="always-include-${scales[i]}">
+            type="checkbox"
+            id="always-include-${scales[i]}" ${inAlways}>
         </input></td>`
         html += `<td class="text-center w-min">
         <input 
             type="checkbox" 
-            id="select-${scales[i]}">
+            id="select-${scales[i]}" ${inSelection}>
         </input></td>`
 
         html += '</tr>';
