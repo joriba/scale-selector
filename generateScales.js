@@ -60,7 +60,7 @@ function chosenForSelection() {
 function selectScales() {
     // we want all the major scales, plus seven randomly chosen minor scales
     // of any type
-    const NUM_SELECT = 7;
+    const NUM_SELECT = document.getElementById("num-select").value.toString();
 
     let selection = shuffle(chosenForSelection()).slice(0, NUM_SELECT);
     let always = alwaysIncluded();
