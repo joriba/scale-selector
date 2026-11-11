@@ -9,11 +9,53 @@ const SCALE_GROUPS = [
     { name: 'Melodic minor', suffix: ' Min (mel)' },
 ].map(group => ({ ...group, scales: NOTES.map(note => note + group.suffix) }));
 
+const STORAGE_KEY = 'scale-selector-settings';
+
 function DEFAULTS() {
     return {
         alwaysInclude: majorScales(),
         selection: minorScales(),
+        numSelect: 7,
     };
+}
+
+// Saved settings, falling back to the defaults for anything missing.
+function loadSettings() {
+    const defaults = DEFAULTS();
+    try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!saved) return defaults;
+        return {
+            alwaysInclude: Array.isArray(saved.alwaysInclude) ? saved.alwaysInclude : defaults.alwaysInclude,
+            selection: Array.isArray(saved.selection) ? saved.selection : defaults.selection,
+            numSelect: Number.isInteger(saved.numSelect) ? saved.numSelect : defaults.numSelect,
+        };
+    } catch {
+        // storage unavailable or corrupted
+        return defaults;
+    }
+}
+
+function saveSettings() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            alwaysInclude: alwaysIncluded(),
+            selection: chosenForSelection(),
+            numSelect: numSelect(),
+        }));
+    } catch {
+        // storage unavailable (e.g. disabled); settings just won't persist
+    }
+}
+
+function resetSettings() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch { }
+    applyScaleSetDisplay();
+    displayScales();
+}
+
+function numSelect() {
+    return Math.max(0, parseInt(document.getElementById('num-select').value, 10) || 0);
 }
 
 function majorScales() {
@@ -50,12 +92,11 @@ function chosenForSelection() {
 // Returns a shuffled list of { scale, random } where `random` marks scales
 // drawn from the selection pool (as opposed to always-included ones).
 function selectScales() {
-    const numSelect = Math.max(0, parseInt(document.getElementById('num-select').value, 10) || 0);
     const always = alwaysIncluded();
     // don't draw scales that are already always included
     const pool = chosenForSelection().filter(scale => !always.includes(scale));
 
-    const drawn = shuffle(pool).slice(0, numSelect).map(scale => ({ scale, random: true }));
+    const drawn = shuffle(pool).slice(0, numSelect()).map(scale => ({ scale, random: true }));
     const fixed = always.map(scale => ({ scale, random: false }));
     return shuffle(fixed.concat(drawn));
 }
@@ -85,10 +126,12 @@ function toggleGroup(groupIndex, kind) {
     const allChecked = boxes.every(box => box.checked);
     boxes.forEach(box => { box.checked = !allChecked; });
     updateSummary();
+    saveSettings();
 }
 
 function applyScaleSetDisplay() {
-    const defaults = DEFAULTS();
+    const settings = loadSettings();
+    document.getElementById('num-select').value = settings.numSelect;
     let html = '<div class="grid gap-4 sm:grid-cols-2">';
 
     SCALE_GROUPS.forEach((group, groupIndex) => {
@@ -106,8 +149,8 @@ function applyScaleSetDisplay() {
         group.scales.forEach(scale => {
             html += `<tr class="border-t border-slate-800 hover:bg-slate-800/60">
                 <td class="py-1 pr-2 text-slate-300">${escapeHtml(scale)}</td>
-                <td class="py-1 text-center">${checkbox('always', scale, defaults.alwaysInclude.includes(scale))}</td>
-                <td class="py-1 text-center">${checkbox('select', scale, defaults.selection.includes(scale))}</td>
+                <td class="py-1 text-center">${checkbox('always', scale, settings.alwaysInclude.includes(scale))}</td>
+                <td class="py-1 text-center">${checkbox('select', scale, settings.selection.includes(scale))}</td>
             </tr>`;
         });
         html += '</tbody></table></section>';
@@ -116,8 +159,16 @@ function applyScaleSetDisplay() {
 
     const container = document.getElementById('scaleset');
     container.innerHTML = html;
-    container.addEventListener('change', updateSummary);
     updateSummary();
+}
+
+// Wire up listeners once; the container's contents get re-rendered on reset.
+function initSettingsListeners() {
+    document.getElementById('scaleset').addEventListener('change', () => {
+        updateSummary();
+        saveSettings();
+    });
+    document.getElementById('num-select').addEventListener('input', saveSettings);
 }
 
 function updateSummary() {
