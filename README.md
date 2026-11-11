@@ -74,11 +74,9 @@ rsvg-convert -w 512 -h 512 icons/icon.svg -o icons/icon-512.png
 
 ## Deployment
 
-Only these files need to be on the server:
-
-```
-index.html  generateScales.js  output.css  manifest.webmanifest  icons/
-```
+The server serves a git clone of this repo from `/var/www/scale-selector`.
+The clone is owned by an unprivileged server user. It lives outside that user's
+home directory because the web server isn't allowed to read home directories.
 
 Any static web server works. With [Caddy](https://caddyserver.com), which runs
 as a systemd service and gets HTTPS certificates automatically, the whole
@@ -86,14 +84,35 @@ config is:
 
 ```
 scales.example.com {
-    root * /path/to/scale-selector
-    file_server
+    root * /var/www/scale-selector
+    file_server {
+        hide .git
+    }
 }
 ```
+
+`hide .git` is important: without it, anyone could download the repository's
+full history from `/.git/`.
 
 Run `sudo systemctl enable --now caddy` so the site comes back up after a
 reboot. Ports 80 and 443 must be open.
 
+### Deploying an update
+
+Rebuild and commit `output.css` if the styling changed, push, then pull on the
+server from your own machine:
+
+```sh
+ssh root@<server> 'sudo -u <serveruser> git -C /var/www/scale-selector pull'
+```
+
+If `<serveruser>` can log in over SSH with your key, you don't need root:
+
+```sh
+ssh <serveruser>@<server> 'git -C /var/www/scale-selector pull'
+```
+
+Caddy serves the new files immediately, with no reload needed.
 
 ## Using it on an iPad
 
