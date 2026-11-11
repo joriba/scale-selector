@@ -2,15 +2,22 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
         <title>Scale Selector</title>
+        <link rel="manifest" href="manifest.webmanifest">
+        <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+        <meta name="theme-color" content="#020617">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Scales">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <link rel="stylesheet" href="output.css">
     </head>
-    <body class="min-h-screen bg-slate-950 text-slate-100 antialiased">
+    <body class="min-h-screen bg-slate-950 text-slate-100 antialiased pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
         <main class="mx-auto max-w-3xl px-4 py-10">
             <header class="mb-8 text-center">
                 <h1 class="text-3xl font-bold tracking-tight">Scale Selector</h1>
-                <p class="mt-1 text-slate-400">Today's practice set</p>
             </header>
 
             <section class="rounded-xl border border-slate-800 bg-slate-900 p-5 shadow-xl">
@@ -18,10 +25,10 @@
                     <label class="flex items-center gap-2 text-sm text-slate-300">
                         Random picks
                         <input type="number" id="num-select" value="7" min="0"
-                            class="w-16 rounded-md border border-slate-700 bg-slate-800 px-2 py-1 text-center text-slate-100 focus:border-indigo-500 focus:outline-none">
+                            class="h-11 w-20 rounded-md border border-slate-700 bg-slate-800 px-2 text-center text-base text-slate-100 focus:border-indigo-500 focus:outline-none">
                     </label>
                     <button type="submit"
-                        class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 active:bg-indigo-700">
+                        class="h-11 rounded-md bg-indigo-600 px-6 text-base font-semibold text-white shadow hover:bg-indigo-500 active:bg-indigo-700">
                         Generate
                     </button>
                 </form>
@@ -35,7 +42,7 @@
             </section>
 
             <details class="group mt-6 rounded-xl border border-slate-800 bg-slate-900 shadow-xl">
-                <summary class="flex cursor-pointer select-none list-none items-center justify-between rounded-xl px-5 py-4 hover:bg-slate-800/50 [&::-webkit-details-marker]:hidden">
+                <summary class="flex min-h-14 cursor-pointer select-none list-none items-center justify-between rounded-xl px-5 py-4 hover:bg-slate-800/50 active:bg-slate-800 [&::-webkit-details-marker]:hidden">
                     <span class="font-semibold">Scale selection</span>
                     <span class="flex items-center gap-3 text-sm text-slate-400">
                         <span id="selection-summary"></span>
@@ -52,7 +59,7 @@
                     <div id="scaleset"></div>
                     <div class="mt-4 text-right">
                         <button type="button" onclick="resetSettings()"
-                            class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-800">
+                            class="h-11 rounded-md border border-slate-700 px-4 text-sm text-slate-300 hover:bg-slate-800 active:bg-slate-700">
                             Reset to defaults
                         </button>
                     </div>

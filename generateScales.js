@@ -106,16 +106,19 @@ function escapeHtml(text) {
 }
 
 function checkbox(kind, scale, checked) {
-    return `<input type="checkbox"
-        class="h-4 w-4 cursor-pointer accent-indigo-500"
-        data-kind="${kind}" data-scale="${escapeHtml(scale)}"
-        aria-label="${kind === 'always' ? 'Always include' : 'Include in random pool'}: ${escapeHtml(scale)}"
-        ${checked ? 'checked' : ''}>`;
+    // the label fills the whole cell so it's an easy touch target
+    return `<label class="flex h-11 w-full cursor-pointer items-center justify-center rounded-md active:bg-slate-700/60">
+        <input type="checkbox"
+            class="h-5 w-5 cursor-pointer accent-indigo-500"
+            data-kind="${kind}" data-scale="${escapeHtml(scale)}"
+            aria-label="${kind === 'always' ? 'Always include' : 'Include in random pool'}: ${escapeHtml(scale)}"
+            ${checked ? 'checked' : ''}>
+    </label>`;
 }
 
 function groupToggle(kind, groupIndex, label) {
     return `<button type="button"
-        class="rounded px-1.5 py-0.5 text-xs text-slate-400 hover:bg-slate-700 hover:text-slate-100"
+        class="mt-1 min-h-9 rounded-md border border-slate-700 px-3 text-xs normal-case tracking-normal text-slate-300 hover:bg-slate-700 hover:text-slate-100 active:bg-slate-600"
         onclick="toggleGroup(${groupIndex}, '${kind}')">${label}</button>`;
 }
 
@@ -140,17 +143,17 @@ function applyScaleSetDisplay() {
             <table class="w-full text-sm">
                 <thead>
                     <tr class="text-xs uppercase tracking-wide text-slate-400">
-                        <th class="pb-1 text-left font-medium">Scale</th>
-                        <th class="pb-1 text-center font-medium">Always<br>${groupToggle('always', groupIndex, 'toggle')}</th>
-                        <th class="pb-1 text-center font-medium">Pool<br>${groupToggle('select', groupIndex, 'toggle')}</th>
+                        <th class="pb-2 text-left align-bottom font-medium">Scale</th>
+                        <th class="w-20 pb-2 text-center font-medium">Always<br>${groupToggle('always', groupIndex, 'toggle')}</th>
+                        <th class="w-20 pb-2 text-center font-medium">Pool<br>${groupToggle('select', groupIndex, 'toggle')}</th>
                     </tr>
                 </thead>
                 <tbody>`;
         group.scales.forEach(scale => {
             html += `<tr class="border-t border-slate-800 hover:bg-slate-800/60">
-                <td class="py-1 pr-2 text-slate-300">${escapeHtml(scale)}</td>
-                <td class="py-1 text-center">${checkbox('always', scale, settings.alwaysInclude.includes(scale))}</td>
-                <td class="py-1 text-center">${checkbox('select', scale, settings.selection.includes(scale))}</td>
+                <td class="pr-2 text-slate-300">${escapeHtml(scale)}</td>
+                <td>${checkbox('always', scale, settings.alwaysInclude.includes(scale))}</td>
+                <td>${checkbox('select', scale, settings.selection.includes(scale))}</td>
             </tr>`;
         });
         html += '</tbody></table></section>';
